@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import VimeoConfig from './interfaces/VimeoConfig';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,4 +9,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'vimeoangular';
+
+  config: VimeoConfig = {
+    id: 18636045,
+    autopause: false
+  };
 }
