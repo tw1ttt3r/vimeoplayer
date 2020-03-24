@@ -1,2 +1,6 @@
-<div #wrapperPlayer></div>
-<button (click)="playPlayer()">PLAY</button>
+<div class="wrapperPlayer" #wrapperPlayer></div>
+<div class="logs" *ngIf="logs">
+  <div *ngFor="let log of logger;">
+    <p> {{log}} </p>
+  </div>
+</div>
