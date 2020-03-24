@@ -1,6 +1,14 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, ViewEncapsulation, AfterViewChecked } from '@angular/core';
 
+import VimeoConfig from '../../interfaces/VimeoConfig';
+
 import Player from '@vimeo/player';
+
+enum statusEnum {
+  'LOADING' = 0,
+  'SUCCESS' = 1,
+  'ERROR' = 2
+};
 
 @Component({
   selector: 'app-customplayer',
@@ -14,37 +22,52 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
 
   @ViewChild('wrapperPlayer', {static: true}) customplayer: ElementRef;
 
-  @Input() idvimeo: number;
-  @Input() wplayer = 640;
+  @Input() config: VimeoConfig;
   @Input() logs: boolean;
+  @Input() loader: string;
+  @Input() errorImage: string;
 
   logger: Array<string>;
 
-  optionsPlayer: any;
+  player: Player;
 
-  player: any;
+  statusEnum = statusEnum;
+
+  status: statusEnum = statusEnum.LOADING;
 
   ngOnInit(): void {
     if (this.logs !== undefined) {
       this.logs = true;
     }
     this.logger = [];
-    if (this.idvimeo === undefined) {
-      throw new Error('The ID or USER is REQUIRED!');
+    if (this.config === undefined) {
+      throw new Error('config is REQUIRED!');
     } else {
-      this.optionsPlayer = {
-        id: this.idvimeo,
-        width: this.wplayer,
-        color: '#F00'
-      };
-      this.player = new Player(this.customplayer.nativeElement, this.optionsPlayer);
+      this.player = new Player(this.customplayer.nativeElement, this.config);
+      
+      this.player.ready().then(()=>{
+        this.addLogger('LISTO');
+        this.status = this.statusEnum.SUCCESS;
+      }).catch((e)=>{
+        this.addLogger(`READY ERROR`);
+        this.status = this.statusEnum.ERROR;
+      });
     }
   }
-
+  
   ngAfterViewChecked() {
-    this.player.on('error', (error) => {
-      this.addLogger(`${error}`);
+    this.addLogger(`${this.status}`);
+
+    this.player.on('loaded', () => {
+      this.addLogger('loaded');
+    }, (e) => {
+      this.addLogger(`LOADED ERROR: ${JSON.stringify(e)}`);
     });
+
+    this.player.on('error', (error) => {
+      this.addLogger(`${JSON.stringify(error)}`);
+    });
+
     this.player.on('play', () => {
       this.addLogger('play');
     });

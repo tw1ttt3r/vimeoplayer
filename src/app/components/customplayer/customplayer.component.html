@@ -1,4 +1,10 @@
-<div class="wrapperPlayer" #wrapperPlayer></div>
+<div class="wrapperPlayer" #wrapperPlayer>
+    <div class="safeArea"  *ngIf="status === statusEnum.LOADING">
+        <img src="{{loader}}" alt="">
+    </div>
+    <img src="{{errorImage}}" alt="" *ngIf="status === statusEnum.ERROR">
+</div>
+
 <div class="logs" *ngIf="logs">
   <div *ngFor="let log of logger;">
     <p> {{log}} </p>
