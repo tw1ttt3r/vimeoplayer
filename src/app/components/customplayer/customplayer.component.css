@@ -4,6 +4,22 @@
   background-color: black;
   display: flex;
   justify-content: center;
+  position: relative;
+}
+
+.safeArea {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  position: absolute;
+}
+
+img {
+  height: 50%;
 }
 
 .logs {
