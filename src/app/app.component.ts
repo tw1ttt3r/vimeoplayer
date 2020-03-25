@@ -4,6 +4,8 @@ import VimeoConfig from './interfaces/VimeoConfig';
 
 import { CustomplayerComponent } from './components/customplayer/customplayer.component';
 
+import { tap } from 'rxjs/operators';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -46,8 +48,14 @@ export class AppComponent {
   ];
 
   addBookmark() {
-    this.customplayer1.createBookmark();
-    const newBook = this.customplayer1.getLastBookmarkCreated();
-    this.bookmarks.push({time: newBook, data: { id: `new${newBook}`, note: `note${newBook}`}});
+    this.customplayer1.createBookmark().pipe(
+      tap((time: number) => {
+        this.customplayer1.addLogger(`NEW BOOOK: ${time}`)
+        this.bookmarks.push({time: time, data: { id: `new${time}`, note: `note${time}`}});
+      },
+      (e) => {
+        this.customplayer1.addLogger(`BOOKMARK ERROR: ${e}`);
+      })
+    ).subscribe();
   }
 }

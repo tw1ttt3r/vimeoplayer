@@ -10,6 +10,6 @@
 <div>
   <button (click)="addBookmark();">ADD BOOKMARK</button>
   <span *ngFor="let book of bookmarks;">
-    <button (click)="customplayer1.navigateBookmark(book.time);"> TIME {{book.data.id}}</button>
+    <button (click)="customplayer1.navigateBookmark(book.time);"> TIME {{book.time}}</button>
   </span>
 </div>
