@@ -1,4 +1,15 @@
 <!-- <app-customplayer idvimeo="18636045" wplayer="860" logs></app-customplayer> -->
-<app-customplayer [config]="config" loader="/assets/images/loader.gif" errorImage="/assets/images/onfire.jpg"></app-customplayer>
+<app-customplayer
+  #customplayer1
+  [config]="config"
+  loader="/assets/images/loader.gif"
+  errorImage="/assets/images/onfire.jpg"
+  logs
+></app-customplayer>
 
-<app-customplayer [config]="config" loader="/assets/images/loader.gif" errorImage="/assets/images/onfire.jpg"></app-customplayer>
+<div>
+  <button (click)="addBookmark();">ADD BOOKMARK</button>
+  <span *ngFor="let book of bookmarks;">
+    <button (click)="customplayer1.navigateBookmark(book.time);"> TIME {{book.data.id}}</button>
+  </span>
+</div>
