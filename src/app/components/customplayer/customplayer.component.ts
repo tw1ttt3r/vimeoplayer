@@ -3,6 +3,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef, ViewEncapsulation, Aft
 import VimeoConfig from '../../interfaces/VimeoConfig';
 
 import Player from '@vimeo/player';
+import { from } from 'rxjs';
 
 enum statusEnum {
   'LOADING' = 0,
@@ -36,7 +37,7 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
 
   status: statusEnum = statusEnum.LOADING;
 
-  newBookmarks: Array<number> = [];
+  lastBookmark: number;
 
   ngOnInit(): void {
     if (this.logs !== undefined) {
@@ -90,7 +91,7 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  protected addLogger(log: string): void {
+  public addLogger(log: string): void {
     if (this.logger.length === 0) {
       this.logger.push(log);
     } else {
@@ -101,18 +102,7 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
   }
 
   public createBookmark() {
-    this.player.getCurrentTime()
-    .then( (time: number) => {
-      this.newBookmarks.push(time);
-      this.addLogger(`GET TIME ${time}`);
-    })
-    .catch ( (e) => {
-      this.addLogger(`BOOKMARK ERROR: ${e}`);
-    });
-  }
-
-  getLastBookmarkCreated(): number {
-    return this.newBookmarks.pop();
+    return from(this.player.getCurrentTime());
   }
 
   navigateBookmark(time: number): void {
