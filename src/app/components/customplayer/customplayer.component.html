@@ -2,7 +2,9 @@
     <div class="safeArea"  *ngIf="status === statusEnum.LOADING">
         <img src="{{loader}}" alt="">
     </div>
-    <img src="{{errorImage}}" alt="" *ngIf="status === statusEnum.ERROR">
+    <div class="safeArea"  *ngIf="status === statusEnum.ERROR">
+        <img src="{{errorImage}}" alt="">
+    </div>
 </div>
 
 <div class="logs" *ngIf="logs">
