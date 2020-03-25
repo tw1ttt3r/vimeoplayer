@@ -112,7 +112,7 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
   }
 
   getLastBookmarkCreated(): number {
-    return this.newBookmarks[this.newBookmarks.length - 1];
+    return this.newBookmarks.pop();
   }
 
   navigateBookmark(time: number): void {
