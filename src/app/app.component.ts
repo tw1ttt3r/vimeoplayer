@@ -19,7 +19,7 @@ export class AppComponent {
   @ViewChild('customplayer1', {static: true}) customplayer1: CustomplayerComponent;
 
   config: VimeoConfig = {
-    id: 399740154,
+    id: 397402255,
     autopause: false
   };
 
@@ -50,8 +50,16 @@ export class AppComponent {
   addBookmark() {
     this.customplayer1.createBookmark().pipe(
       tap((time: number) => {
-        this.customplayer1.addLogger(`NEW BOOOK: ${time}`)
-        this.bookmarks.push({time: time, data: { id: `new${time}`, note: `note${time}`}});
+        if (time < this.customplayer1.getDurationVideo) {
+          this.customplayer1.addLogger(`NEW BOOOK: ${time}`);
+          if (this.bookmarks.filter(book => time === book.time).length === 0) {
+            this.bookmarks.push({ time, data: { id: `new${time}`, note: `note${time}`}});
+          } else {
+            this.customplayer1.addLogger(`ERROR BOOKMARK: THIS BOOKMARK CURRENTLY EXISTS`);
+          }
+        } else {
+          this.customplayer1.addLogger(`ERROR BOOKMARK: CAN'T CREATE BOOKMARK`);
+        }
       },
       (e) => {
         this.customplayer1.addLogger(`BOOKMARK ERROR: ${e}`);
