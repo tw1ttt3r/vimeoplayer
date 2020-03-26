@@ -3,6 +3,7 @@ import { Component, OnInit, Input, ViewChild, ElementRef, ViewEncapsulation, Aft
 import VimeoConfig from '../../interfaces/VimeoConfig';
 
 import Player from '@vimeo/player';
+
 import { from } from 'rxjs';
 
 enum statusEnum {
@@ -21,23 +22,24 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
 
   constructor() { }
 
-  @ViewChild('wrapperPlayer', {static: true}) customplayer: ElementRef;
+  @ViewChild('wrapperPlayer', {static: true}) private customplayer: ElementRef;
 
-  @Input() config: VimeoConfig;
-  @Input() bookmarks: Array<number>;
-  @Input() logs: boolean;
-  @Input() loader: string;
-  @Input() errorImage: string;
+  @Input() private config: VimeoConfig;
+  @Input() private logs: boolean;
+  @Input() private loader: string;
+  @Input() private errorImage: string;
 
-  logger: Array<string>;
+  private logger: Array<string>;
 
-  player: Player;
+  private player: Player;
 
-  statusEnum = statusEnum;
+  private statusEnum = statusEnum;
 
-  status: statusEnum = statusEnum.LOADING;
+  private status: statusEnum = statusEnum.LOADING;
 
-  lastBookmark: number;
+  private durationVideo = 0;
+
+  private cuePointVideo = [];
 
   ngOnInit(): void {
     if (this.logs !== undefined) {
@@ -48,9 +50,32 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
       throw new Error('config is REQUIRED!');
     } else {
       this.player = new Player(this.customplayer.nativeElement, this.config);
-
       this.player.ready().then(() => {
         this.status = this.statusEnum.SUCCESS;
+        this.player.getDuration()
+        .then(
+          (duration: number) => {
+            this.durationVideo = duration;
+            this.addLogger(`DURATION: ${duration}`);
+          }
+        )
+        .catch(
+          (e) => {
+            this.addLogger(`ERROR DURATION: ${e}`);
+          }
+        );
+        this.player.getCuePoints()
+        .then(
+          (cuepoints) => {
+            this.cuePointVideo = cuepoints;
+            this.addLogger(`CUEPOINTS TOTAL: ${cuepoints.length}`);
+          }
+        )
+        .catch(
+          (e) => {
+            this.addLogger(`ERROR CUEPOINTS: ${e}`);
+          }
+        );
       }).catch((e: void) => {
         this.addLogger(`READY ERROR`);
         this.status = this.statusEnum.ERROR;
@@ -91,7 +116,7 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  public addLogger(log: string): void {
+  addLogger(log: string): void {
     if (this.logger.length === 0) {
       this.logger.push(log);
     } else {
@@ -101,8 +126,16 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  public createBookmark() {
+  createBookmark() {
     return from(this.player.getCurrentTime());
+  }
+
+  get getDurationVideo() {
+    return this.durationVideo;
+  }
+
+  get getCuePointsVideo() {
+    return this.cuePointVideo;
   }
 
   navigateBookmark(time: number): void {
