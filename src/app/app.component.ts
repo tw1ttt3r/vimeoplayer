@@ -19,8 +19,11 @@ export class AppComponent {
   @ViewChild('customplayer1', {static: true}) customplayer1: CustomplayerComponent;
 
   config: VimeoConfig = {
-    id: 397402255,
-    autopause: false
+    id: 401032656,
+    width: 860,
+    color: 'F43D4A',
+    byline: false,
+    title: false
   };
 
   bookmarks = [
