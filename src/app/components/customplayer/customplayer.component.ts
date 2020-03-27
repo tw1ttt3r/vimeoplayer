@@ -25,17 +25,17 @@ export class CustomplayerComponent implements OnInit, AfterViewChecked {
   @ViewChild('wrapperPlayer', {static: true}) private customplayer: ElementRef;
 
   @Input() private config: VimeoConfig;
-  @Input() private logs: boolean;
-  @Input() private loader: string;
-  @Input() private errorImage: string;
+  @Input() logs: boolean;
+  @Input() loader: string;
+  @Input() errorImage: string;
 
-  private logger: Array<string>;
+  logger: Array<string>;
 
   private player: Player;
 
-  private statusEnum = statusEnum;
+  statusEnum = statusEnum;
 
-  private status: statusEnum = statusEnum.LOADING;
+  status: statusEnum = statusEnum.LOADING;
 
   private durationVideo = 0;
 
